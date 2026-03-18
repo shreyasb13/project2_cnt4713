@@ -1,7 +1,7 @@
 # Alexa Arce PID: 6384093
-# Diego Avalos PID:6347463
+# Diego Avalos PID: 6347463
 # Christian Montilla PID: ?
-# Shreya Sureshbabu PID: 6472712
+# Shreya Sureshbabu Banumathi PID: 6472712
 
 # Import socket module
 from socket import *
