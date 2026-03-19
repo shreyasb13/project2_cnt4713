@@ -10,7 +10,7 @@ Or with python3,
 ```
 python3 mydns.py <domain-name> <root-dns-ip>
 ```
-Replace <domain-name> with the server and <root-dns-ip> with an IP address (replace includes the <>).
+Replace domain-name with the server and root-dns-ip with an IP address (replace includes the <>).
 
 Contributing Student Names and PID
 <br>
