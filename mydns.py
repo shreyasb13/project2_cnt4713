@@ -1,11 +1,18 @@
 # Alexa Arce PID: 6384093
 # Diego Avalos PID: 6347463
-# Christian Montilla PID: ?
+# Cristian Mantilla PID: 6393437
 # Shreya Sureshbabu Banumathi PID: 6472712
 
 # Import socket module
 from socket import *
 import sys
+
+#Throw exception if usage does not have required amount of parameters
+if len(sys.argv) < 3:
+    raise IndexError(
+        f"Expected 2 arguments! Only found {len(sys.argv) - 1}.\n"
+        "Usage: python mydns.py domain-name root-dns-ip"
+    )
 
 # Get the domain name and the root DNS IP from the command line
 domainName = sys.argv[1]
