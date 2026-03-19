@@ -88,11 +88,15 @@ for _ in range(answerCount):
 
 # Will skip over the authority section
 for _ in range(authorityCount):
-    index += 2
+    if receiveData[index] == 192:  # compressed name
+        index += 2
+    else: # uncompressed name
+        while receiveData[index] != 0:
+            index += receiveData[index] + 1
+        index += 1
     index += 8
-    dataLength = int.from_bytes(receiveData[index:index+2], 'big')
+    dataLength = int.from_bytes(receiveData[index:index + 2], 'big')
     index += 2 + dataLength
-
 
 # Processes the additional information section
 print("Additional Information Section:")
@@ -126,7 +130,7 @@ print("------------------------------------------------------------")
 print("Next DNS server to query:", nextDnsIP)
 
 
-while nextDnsIP != None:
+while nextDnsIP is not None:
     udpSocket.sendto(packet, (nextDnsIP, 53)) # Send query to the intermediate server
     receiveData, receiveServer = udpSocket.recvfrom(512) # Receive at most 512 bytes
 
@@ -152,11 +156,28 @@ while nextDnsIP != None:
 
     # Prints answers if any
     if answerCount > 0:
+        print("Answer section:")
+        for _ in range(answerCount):
+            index += 2
+            recordType = int.from_bytes(receiveData[index:index+2], 'big')
+            index += 8
+            dataLength = int.from_bytes(receiveData[index:index+2], 'big')
+            index += 2 + dataLength
+            if recordType == 1 and dataLength == 4:
+                ipBytes = receiveData[index:index+4]
+                ipAddr = ".".join(str(b) for b in ipBytes)
+                print("Final IP:", ipAddr)
+            index += dataLength
         break
 
     # Skips the authority section
     for _ in range(authorityCount):
-        index += 2
+        if receiveData[index] == 192: # compressed
+            index += 2
+        else:
+            while receiveData[index] != 0:
+                index += receiveData[index] + 1
+            index += 1
         index += 8
         dataLength = int.from_bytes(receiveData[index:index+2], 'big')
         index += 2 + dataLength
