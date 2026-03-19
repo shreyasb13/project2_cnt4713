@@ -57,6 +57,8 @@ def parse_rr(data: bytes, index: int) -> tuple[dict, int]:
         decoded = ".".join(str(b) for b in rdata)
     elif rtype == 2:  # NS record
         decoded, _ = parse_name(data, index - rdlen)
+    elif rtype == 28: #IPV6
+        decoded = "IPV6 - IGNORED"
     else:
         decoded = rdata.hex()
 
@@ -65,6 +67,8 @@ def parse_rr(data: bytes, index: int) -> tuple[dict, int]:
 def print_rr(rr: dict) -> None:
     if rr['type'] == 1:
         print(f"\tName : {rr['name']}\tIP : {rr['rdata']}")
+    elif rr['type'] == 28:
+        None
     else :
         print(f"\tName : {rr['name']}\tName Server: {rr['rdata']}")
     return

@@ -76,9 +76,9 @@ questionCount = int.from_bytes(receiveData[index : index + 2], 'big')
 index += 2 #Move past questions
 answerCount = int.from_bytes(receiveData[index : index + 2], 'big')
 index += 2 #Move past answers
-authorityCount = int.from_bytes(receiveData[index :10], 'big')
+authorityCount = int.from_bytes(receiveData[index : index + 2], 'big')
 index += 2 #Move past authority count
-additionalCount = int.from_bytes(receiveData[10:12], 'big')
+additionalCount = int.from_bytes(receiveData[index : index + 2], 'big')
 index += 2 #Move past additional count
 
 
@@ -126,7 +126,6 @@ if additionalCount:
 while nextDnsIP != None:
     udpSocket.sendto(packet, (nextDnsIP, 53)) # Send query to the intermediate server
     receiveData, receiveServer = udpSocket.recvfrom(512) # Receive at most 512 bytes
-    nextDnsIP = None
 
     index = 0
     index += 2  # Skip id
@@ -135,19 +134,19 @@ while nextDnsIP != None:
     index += 2  # Move past questions
     answerCount = int.from_bytes(receiveData[index: index + 2], 'big')
     index += 2  # Move past answers
-    authorityCount = int.from_bytes(receiveData[index:10], 'big')
+    authorityCount = int.from_bytes(receiveData[index: index + 2], 'big')
     index += 2  # Move past authority count
-    additionalCount = int.from_bytes(receiveData[10:12], 'big')
+    additionalCount = int.from_bytes(receiveData[index : index + 2], 'big')
     index += 2  # Move past additional count
 
     # Print results from root DNS server
     print("------------------------------------------------------------")
-    print("DNS server to query:", rootDnsIP)
+    print("DNS server to query:", nextDnsIP)
     print("Reply received. Content overview:")
     print("\t", answerCount, "Answers.")
     print("\t", authorityCount, "Intermediate Name Servers.")
     print("\t", additionalCount, "Additional Information Records.")
-
+    nextDnsIP = None
     # Will move past the question section
     for _ in range(questionCount):
         _, index = dns_parse.parse_name(receiveData, index)
